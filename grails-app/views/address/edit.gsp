@@ -119,11 +119,11 @@
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                    <label for="postCode"><g:message code="address.postCode.label" default="Post Code" /></label>
+                                    <label for="postCodeEntry"><g:message code="address.postCode.label" default="Post Code" /></label>
                                 </td>
                                 <td valign="top" class="value">
                                     %{--<g:textField name="postCodeEntry" value=""/>--}%
-                                    <g:textField name="postCode" id="postCode" value="${addressInstance?.postCode.postCode}"/>
+                                    <g:textField name="postCodeEntry" id="postCodeEntry" value="${addressInstance?.postCode.postCode}"/>
                                     %{--<g:textField name="postCode" id="postCode" value="${addressInstance?.postCode.postCode}"--}%
                                         %{--onchange="${remoteFunction(--}%
                                             %{--controller:'address', --}%
@@ -174,10 +174,10 @@
                 </div>
 
                 <g:javascript>
-                    $('#postCode').change(function() {
+                    $('#postCodeEntry').change(function() {
                            var request = $.ajax({
                                 url:'${g.createLink( controller:'address', action:'ajaxGetSuburbs')}',
-                                data: {id: $('#postCode').val()},
+                                data: {id: $('#postCodeEntry').val()},
                                 dataType: 'json',
                                 success: updateSuburb,
                                 beforeSend: showSpinner,
@@ -204,7 +204,8 @@
                 </g:javascript>
 
                 <div class="form-actions">
-                    <g:submitButton class="btn btn-primary" name="create" value="${message(code: 'default.button.edit.label', default: 'Save changes')}" />
+                    <g:hiddenField class="" name="id" value="${addressInstance?.id}" />
+                    <g:submitButton class="btn btn-primary" name="create" action="update" value="${message(code: 'default.button.edit.label', default: 'Save changes')}" />
                     <g:link controller="Address" action="show" id="${addressInstance?.id}" class="btn">Cancel</g:link>
                 </div>
                 </fieldset>
