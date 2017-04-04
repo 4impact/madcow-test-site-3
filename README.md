@@ -38,6 +38,13 @@ $ heroku addons:create heroku-postgresql
 $ git push heroku master
 ```
 
+or as I've already created it in heroku you just need to add the remote repo using
+```
+heroku git:remote -a madcow-test-site-3
+git push heroku master
+```
+provided your heroku cli is installed correctly and you have permission to the app.
+
 NOTE: You may find that this app fails to start up with in the 60 second
 boot timeout limit imposed by Heroku. If that's the case, please contact
 [Heroku Support](http://help.heroku.com).
