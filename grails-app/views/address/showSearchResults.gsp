@@ -47,8 +47,10 @@
                     </tbody>
                 </table>
             </div>
-            <div class="paginateButtons">
-                <g:paginate total="${params.totalAddresses}" params="${params}"/>
+            <div class="pagination">
+                <ul>
+                    <g:paginate total="${params.totalAddresses}" params="${params}"/>
+                </ul>
             </div>
         </div>
     </body>

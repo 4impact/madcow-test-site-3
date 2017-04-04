@@ -51,7 +51,9 @@
 				</tbody>
 			</table>
 			<div class="pagination">
-				<g:paginate total="${addressInstanceTotal}" />
+				<ul>
+					<g:paginate total="${addressInstanceTotal}" />
+				</ul>
 			</div>
 		</div>
 	</body>

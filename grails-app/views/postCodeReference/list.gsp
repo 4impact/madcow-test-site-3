@@ -47,8 +47,13 @@
 				</tbody>
 			</table>
 			<div class="pagination">
-				<g:paginate total="${postCodeReferenceInstanceTotal}" max="50" />
+				<ul>
+					<g:paginate total="${postCodeReferenceInstanceTotal}" max="50" />
+				</ul>
 			</div>
+			<g:javascript>
+				$( ".currentStep,.nextLink,.prevLink,.step" ).wrap( "<li></li>" );
+			</g:javascript>
 		</div>
 	</body>
 </html>

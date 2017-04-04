@@ -18,3 +18,5 @@ if (typeof jQuery !== 'undefined') {
         });
     })(jQuery);
 }
+
+$( ".currentStep,.nextLink,.prevLink,.step" ).wrap( "<li></li>" );

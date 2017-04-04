@@ -44,8 +44,10 @@
                     </tbody>
                 </table>
             </div>
-            <div class="paginateButtons">
-                <g:paginate total="${stateInstanceTotal}" />
+            <div class="pagination">
+                <ul>
+                    <g:paginate total="${stateInstanceTotal}" />
+                </ul>
             </div>
         </div>
     </body>
