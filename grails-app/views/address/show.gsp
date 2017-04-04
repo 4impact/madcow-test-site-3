@@ -76,14 +76,16 @@
                     </tbody>
                 </table>
             </form>
-                <g:form class="form-horizontal" controller="Address" action="delete">
+                <g:form class="form-horizontal" controller="Address">
                     <div class="form-actions">
                         <g:hiddenField class="" name="id" value="${addressInstance?.id}" />
                         <g:actionSubmit class="btn btn-primary" action="edit" value="${message(code: 'default.button.edit.label', default: 'Edit')}" />
-                        <button type="submit" class="btn btn-danger" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');">
-                            <i class="icon-trash icon-white"></i>
-                            Delete
-                        </button>
+                        <g:actionSubmit action="delete" class="btn btn-danger" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');"
+                            value="Delete"><i class="icon-trash icon-white"></i></g:actionSubmit>
+                        %{--<button type="submit" class="btn btn-danger" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');">--}%
+                            %{----}%
+                            %{--Delete--}%
+                        %{--</button>--}%
                     </div>
                 </g:form>
         </div>

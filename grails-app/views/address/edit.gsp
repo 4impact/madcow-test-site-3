@@ -9,10 +9,10 @@
         <g:javascript library="application" />
 		<g:javascript>
 		
-		    function updateSuburb(e) { // The response comes back as a bunch-o-JSON
+		    function updateSuburb(data, status, xmlHttpRequest) { // The response comes back as a bunch-o-JSON
 		        //console.log(e);
-		        var postCodes = eval("(" + e.responseText + ")") // evaluate JSON		    
-		    
+		        //var postCodes = eval("(" + e.responseText + ")") // evaluate JSON
+		        var postCodes = data;
 		        // remove existing radio buttons
 		        var radioButtonLocation = document.getElementById("suburbOptions");
 		        while (radioButtonLocation.lastChild){
@@ -54,10 +54,11 @@
 		        }
 		    }
 
-		    function showNumberOfDuplicates(e) {
+		    function showNumberOfDuplicates(data, status, xmlHttpRequest) {
 		        clearNumberOfDuplicatesMessage()
 		        //parse the result into a string
-		        var numberOfResults = eval("(" + e.responseText + ")");
+		        //var numberOfResults = eval("(" + e.responseText + ")");
+                var numberOfResults = data;
 
                 //Create a text node containing our message
 		        var message = numberOfResults + " ${message(code: 'address.create.NumberOfDuplicates')}"
@@ -120,14 +121,16 @@
                                 <td valign="top" class="name">
                                     <label for="postCode"><g:message code="address.postCode.label" default="Post Code" /></label>
                                 </td>
-                                <td valign="top" class="value">                                    
-                                    <g:textField name="postCode" id="postCode" value="${addressInstance?.postCode.postCode}"
-                                        onchange="${remoteFunction(
-                                            controller:'address', 
-                                            action:'ajaxGetSuburbs',
-                                            params:'\'id=\' + escape(this.value)',
-                                            onLoading:'showSpinner(true);',
-                                            onComplete:'updateSuburb(XMLHttpRequest);showSpinner(false);')}" />
+                                <td valign="top" class="value">
+                                    %{--<g:textField name="postCodeEntry" value=""/>--}%
+                                    <g:textField name="postCode" id="postCode" value="${addressInstance?.postCode.postCode}"/>
+                                    %{--<g:textField name="postCode" id="postCode" value="${addressInstance?.postCode.postCode}"--}%
+                                        %{--onchange="${remoteFunction(--}%
+                                            %{--controller:'address', --}%
+                                            %{--action:'ajaxGetSuburbs',--}%
+                                            %{--params:'\'id=\' + escape(this.value)',--}%
+                                            %{--onLoading:'showSpinner(true);',--}%
+                                            %{--onComplete:'updateSuburb(XMLHttpRequest);showSpinner(false);')}" />--}%
                                 </td>
                             </tr>
                             
@@ -153,13 +156,14 @@
                             <td valign="top" class="name">
                             </td>
                             <td valign="top">
-                                <g:submitToRemote class="btn btn-info"
-                                                  name="checkForDuplicates"
-                                                  value="${message(code: 'address.create.button.CheckForDuplicates', default: 'Check For Duplicates')}"
-                                                  controller="address"
-                                                  action="ajaxCheckForDuplicates"
-                                                  onLoading="showSpinner(true);"
-                                                  onComplete="showNumberOfDuplicates(XMLHttpRequest); showSpinner(false);"/>
+                                <span class="btn btn-info" id="checkForDuplicates">${message(code: 'address.create.button.CheckForDuplicates', default: 'Check For Duplicates')}</span>
+                                %{--<g:submitToRemote class="btn btn-info"--}%
+                                                  %{--name="checkForDuplicates"--}%
+                                                  %{--value="${message(code: 'address.create.button.CheckForDuplicates', default: 'Check For Duplicates')}"--}%
+                                                  %{--controller="address"--}%
+                                                  %{--action="ajaxCheckForDuplicates"--}%
+                                                  %{--onLoading="showSpinner(true);"--}%
+                                                  %{--onComplete="showNumberOfDuplicates(XMLHttpRequest); showSpinner(false);"/>--}%
                                 <div class="spinner" id="spinner" style="display:none;">
                                     <img src="${resource(dir:'images',file:'spinner.gif')}" alt="${message(code:'spinner.alt',default:'Loading...')}" />
                                 </div>
@@ -168,6 +172,36 @@
                         </tr>
                     </table>
                 </div>
+
+                <g:javascript>
+                    $('#postCode').change(function() {
+                           var request = $.ajax({
+                                url:'${g.createLink( controller:'address', action:'ajaxGetSuburbs')}',
+                                data: {id: $('#postCode').val()},
+                                dataType: 'json',
+                                success: updateSuburb,
+                                beforeSend: showSpinner,
+                                complete: showSpinner,
+                                error: showSpinner
+                           });
+
+                        });
+                    $('#checkForDuplicates').click(function() {
+                       $.ajax({
+                            url:'${g.createLink( controller:'address', action:'ajaxCheckForDuplicates')}',
+                            data: $("form").serializeArray(),
+                            dataType: 'json',
+                            success: showNumberOfDuplicates,
+                            beforeSend: function(xhr) {
+                                            clearNumberOfDuplicatesMessage();
+                                            showSpinner();
+                                        },
+                            complete: showSpinner,
+                            error: showSpinner
+                       });
+
+                    });
+                </g:javascript>
 
                 <div class="form-actions">
                     <g:submitButton class="btn btn-primary" name="create" value="${message(code: 'default.button.edit.label', default: 'Save changes')}" />
