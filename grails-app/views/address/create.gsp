@@ -123,13 +123,14 @@
 
                             <g:javascript>
                                 $('#postCodeEntry').change(function() {
-                                   $.ajax({
+                                   var request = $.ajax({
                                         url:'${g.createLink( controller:'address', action:'ajaxGetSuburbs')}',
                                         data: {id:$('#postCodeEntry').val()},
                                         dataType: 'json',
                                         success: updateSuburb,
                                         beforeSend: showSpinner,
-                                        done: showSpinner
+                                        complete: showSpinner,
+                                        error: showSpinner
                                    });
 
                                 });
@@ -177,14 +178,14 @@
                             </div>
 
                             <g:javascript>
-                                $('#postCodeEntry').change(function() {
+                                $('#checkForDuplicates').click(function() {
                                    $.ajax({
                                         url:'${g.createLink( controller:'address', action:'ajaxCheckForDuplicates')}',
-                                        data: {id:$('#postCodeEntry').val()},
                                         dataType: 'json',
                                         success: showNumberOfDuplicates,
                                         beforeSend: showSpinner,
-                                        done: showSpinner
+                                        complete: showSpinner,
+                                        error: showSpinner
                                    });
 
                                 });
