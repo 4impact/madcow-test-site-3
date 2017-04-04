@@ -9,10 +9,10 @@
         <g:javascript library="application" />
 		<g:javascript>
 		
-		    function updateSuburb(e) { // The response comes back as a bunch-o-JSON
+		    function updateSuburb(data, status, xmlHttpRequest) { // The response comes back as a bunch-o-JSON
 		        //console.log(e);
-		        var postCodes = eval("(" + e.responseText + ")") // evaluate JSON		    
-		    
+		        //var postCodes = eval("(" + data.responseText + ")") // evaluate JSON
+		        var postCodes = data;
 		        // remove existing radio buttons
 		        var radioButtonLocation = document.getElementById("suburbOptions");
 		        while (radioButtonLocation.lastChild){
@@ -54,10 +54,11 @@
 		        }
 		    }
 
-		    function showNumberOfDuplicates(e) {
+		    function showNumberOfDuplicates(data, status, xmlHttpRequest) {
 		        clearNumberOfDuplicatesMessage()
 		        //parse the result into a string
-		        var numberOfResults = eval("(" + e.responseText + ")");
+		        //var numberOfResults = eval("(" + e.responseText + ")");
+		        var numberOfResults = data;
 
                 //Create a text node containing our message
 		        var message = numberOfResults + " ${message(code: 'address.create.NumberOfDuplicates')}"
@@ -110,7 +111,7 @@
                             <div class="control-group">
                                 <label class="control-label" for="postCodeEntry"><g:message code="address.postCode.label" default="Post Code" /></label>
                                 <div class="controls">
-                                    <g:textField name="postCodeEntry" />                                   
+                                    <g:textField name="postCodeEntry" value=""/>
 %{--                                         onchange="${remoteFunction(
                                             controller:'address', 
                                             action:'ajaxGetSuburbs',
@@ -120,19 +121,30 @@
                                 </div>
                             </div>
 
-%{--                             
                             <g:javascript>
-                              function go(){
-                                $.ajax({ 
-                                  url:'${g.createLink( controller:'address', action:'ajaxGetSuburbs', params:'\'id=\' + escape(this.value)' 
-                                  )}',
-                                  data:{ param1:param1 }
+                                $('#postCodeEntry').change(function() {
+                                   $.ajax({
+                                        url:'${g.createLink( controller:'address', action:'ajaxGetSuburbs')}',
+                                        data: {id:$('#postCodeEntry').val()},
+                                        dataType: 'json',
+                                        success: updateSuburb,
+                                        beforeSend: showSpinner,
+                                        done: showSpinner
+                                   });
+
                                 });
-                              }
+
+                              %{--function go(){--}%
+                            %{--  dataType: 'json'--}%
+                              %{--$.ajax({ --}%
+                                  %{--url:'${g.createLink( controller:'address', action:'ajaxGetSuburbs', params:[id: this.value])}',--}%
+                                  %{--data:{ param1:param1 }--}%
+                                %{--});--}%
+                                %{--updateSuburb(XMLHttpRequest);--}%
+                              %{--}--}%
                             </g:javascript>
 
-                            <input type="button" value="go!" onclick="go()"/>
- --}%                            
+                            %{--<input type="button" value="go!" onclick="go()"/>--}%
                             <div class="control-group">
                                 <label class="control-label" for="suburbOptions"><g:message code="address.suburb.label" default="Suburb" /></label>
                                 <div id="suburbOptions" class="controls"></div>
@@ -149,19 +161,34 @@
                                 <div class="control-label">
                                 </div>
                                 <div class="controls">
-%{--                                     <g:submitToRemote class="btn btn-info"
-                                                      name="checkForDuplicates"
-                                                      value="${message(code: 'address.create.button.CheckForDuplicates', default: 'Check For Duplicates')}"
-                                                      controller="address"
-                                                      action="ajaxCheckForDuplicates"
-                                                      onLoading="showSpinner(true);"
-                                                      onComplete="showNumberOfDuplicates(XMLHttpRequest); showSpinner(false);"/> --}%
+                                    <button class="btn btn-info" name="checkForDuplicates">${message(code: 'address.create.button.CheckForDuplicates', default: 'Check For Duplicates')}</button>
+                                    %{--                                     <g:submitToRemote class="btn btn-info"
+                                                                                          name="checkForDuplicates"
+                                                                                          value="${message(code: 'address.create.button.CheckForDuplicates', default: 'Check For Duplicates')}"
+                                                                                          controller="address"
+                                                                                          action="ajaxCheckForDuplicates"
+                                                                                          onLoading="showSpinner(true);"
+                                                                                          onComplete="showNumberOfDuplicates(XMLHttpRequest); showSpinner(false);"/> --}%
                                     <div class="spinner" id="spinner" style="display:none;">
                                         <img src="${resource(dir:'images',file:'spinner.gif')}" alt="${message(code:'spinner.alt',default:'Loading...')}" />
                                     </div>
                                     <div class="warning" id="duplicatesMessage"></div>
                                 </div>
                             </div>
+
+                            <g:javascript>
+                                $('#postCodeEntry').change(function() {
+                                   $.ajax({
+                                        url:'${g.createLink( controller:'address', action:'ajaxCheckForDuplicates')}',
+                                        data: {id:$('#postCodeEntry').val()},
+                                        dataType: 'json',
+                                        success: showNumberOfDuplicates,
+                                        beforeSend: showSpinner,
+                                        done: showSpinner
+                                   });
+
+                                });
+                            </g:javascript>
 
                 <div class="form-actions">
                     <g:submitButton class="btn btn-primary" name="create" value="${message(code: 'default.button.create.label', default: 'Create')}" />

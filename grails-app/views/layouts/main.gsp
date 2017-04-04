@@ -43,8 +43,14 @@
 
     </style>
     <g:javascript>
-        function showSpinner(visible) {
-            $('spinner').style.display = visible ? "inline" : "none";
+        function showSpinner() {
+
+            if ($('#spinner').css("display") === "none"){
+                $('#spinner').css("display","inline");
+            } else {
+                $('#spinner').css("display","none");
+            }
+
         }
     </g:javascript>
     <r:layoutResources/>
