@@ -162,7 +162,7 @@
                                 <div class="control-label">
                                 </div>
                                 <div class="controls">
-                                    <button class="btn btn-info" name="checkForDuplicates">${message(code: 'address.create.button.CheckForDuplicates', default: 'Check For Duplicates')}</button>
+                                    <span class="btn btn-info" id="checkForDuplicates">${message(code: 'address.create.button.CheckForDuplicates', default: 'Check For Duplicates')}</span>
                                     %{--                                     <g:submitToRemote class="btn btn-info"
                                                                                           name="checkForDuplicates"
                                                                                           value="${message(code: 'address.create.button.CheckForDuplicates', default: 'Check For Duplicates')}"
@@ -181,6 +181,7 @@
                                 $('#checkForDuplicates').click(function() {
                                    $.ajax({
                                         url:'${g.createLink( controller:'address', action:'ajaxCheckForDuplicates')}',
+                                        data: $("form").serializeArray(),
                                         dataType: 'json',
                                         success: showNumberOfDuplicates,
                                         beforeSend: showSpinner,
