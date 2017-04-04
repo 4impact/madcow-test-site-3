@@ -18,7 +18,12 @@ This has been built using the Grails for Heroku Grails 3 Example codebase and us
 It is visible here: https://github.com/kissaten/grails3-example
 
 ## Grails 3 on Heroku Example
+To run this up locally use grails 3.0.1 and run 
+```
+grails run-app
+```
 
+To run this on heroku...
 ```
 $ git clone <this repo>
 $ heroku create
