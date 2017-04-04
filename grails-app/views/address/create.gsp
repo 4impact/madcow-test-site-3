@@ -125,7 +125,7 @@
                                 $('#postCodeEntry').change(function() {
                                    var request = $.ajax({
                                         url:'${g.createLink( controller:'address', action:'ajaxGetSuburbs')}',
-                                        data: {id:$('#postCodeEntry').val()},
+                                        data: {id: $('#postCodeEntry').val()},
                                         dataType: 'json',
                                         success: updateSuburb,
                                         beforeSend: showSpinner,
@@ -184,7 +184,10 @@
                                         data: $("form").serializeArray(),
                                         dataType: 'json',
                                         success: showNumberOfDuplicates,
-                                        beforeSend: showSpinner,
+                                        beforeSend: function(xhr) {
+                                                        clearNumberOfDuplicatesMessage();
+                                                        showSpinner();
+                                                    },
                                         complete: showSpinner,
                                         error: showSpinner
                                    });

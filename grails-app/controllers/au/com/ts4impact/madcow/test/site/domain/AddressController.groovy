@@ -38,18 +38,27 @@ class AddressController {
         //Sleep a random amount of time under 5 seconds to make this ajax laggy
         sleep new Random().nextInt(5001)
 
+        if (!params.max){
+            params.putAll([max: 10, offset: 0, sort : "id"]);
+        }
+
         def searchResults = Address.createCriteria().list(max: params.max, offset: params.offset) {
 
             ilike("addressLine1", "%${params.addressLine1}%")
-            and {
-                ilike("addressLine2", "%${params.addressLine2}%")
+
+            if (params.addressLine2) {
+                and {
+                    ilike("addressLine2", "%${params.addressLine2}%")
+                }
             }
+
             and {
                 postCode {
                     eq("postCode", "${params.postCodeEntry}")
                 }
             }
         }
+        println "...returned ${searchResults.totalCount} results"
         render searchResults.totalCount
     }
 
