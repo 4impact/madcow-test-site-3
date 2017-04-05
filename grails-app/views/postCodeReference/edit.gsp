@@ -65,14 +65,9 @@
                     </table>
                 </div>
                 <div class="form-actions">
+                    <g:hiddenField name="id" value="${postCodeReferenceInstance?.id}" />
                     <span class="button"><g:actionSubmit class="btn btn-primary" action="update" value="${message(code: 'default.button.update.label', default: 'Update')}" /></span>
-                    <g:form action="delete" controller="PostCodeReference">
-                        <button class="btn btn-danger" type="submit" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" >
-                            <i class="icon-trash icon-white"></i>
-                            Delete
-                        </button>
-                        <g:hiddenField name="id" value="${stateInstance?.id}" />
-                    </g:form>
+                    <g:link controller="postCodeReference" action="show" id="${postCodeReferenceInstance?.id}" class="btn">Cancel</g:link>
                 </div>
             </g:form>
         </div>

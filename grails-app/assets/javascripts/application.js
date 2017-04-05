@@ -20,3 +20,13 @@ if (typeof jQuery !== 'undefined') {
 }
 
 $( ".currentStep,.nextLink,.prevLink,.step" ).wrap( "<li></li>" );
+
+function showSpinner() {
+
+    if ($('#spinner').css("display") === "none"){
+        $('#spinner').css("display","inline");
+    } else {
+        $('#spinner').css("display","none");
+    }
+
+}

@@ -1,3 +1,5 @@
+package au.com.ts4impact.madcow.test.site
+
 class UrlMappings {
 
     static mappings = {

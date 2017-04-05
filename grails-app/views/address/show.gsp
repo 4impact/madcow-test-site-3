@@ -82,10 +82,6 @@
                         <g:actionSubmit class="btn btn-primary" action="edit" value="${message(code: 'default.button.edit.label', default: 'Edit')}" />
                         <g:actionSubmit action="delete" class="btn btn-danger" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');"
                             value="Delete"><i class="icon-trash icon-white"></i></g:actionSubmit>
-                        %{--<button type="submit" class="btn btn-danger" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');">--}%
-                            %{----}%
-                            %{--Delete--}%
-                        %{--</button>--}%
                     </div>
                 </g:form>
         </div>

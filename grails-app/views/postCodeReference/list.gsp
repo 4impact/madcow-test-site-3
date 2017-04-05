@@ -51,9 +51,9 @@
 					<g:paginate total="${postCodeReferenceInstanceTotal}" max="50" />
 				</ul>
 			</div>
-			<g:javascript>
-				$( ".currentStep,.nextLink,.prevLink,.step" ).wrap( "<li></li>" );
-			</g:javascript>
+			%{--<g:javascript>--}%
+				%{--$( ".currentStep,.nextLink,.prevLink,.step" ).wrap( "<li></li>" );--}%
+			%{--</g:javascript>--}%
 		</div>
 	</body>
 </html>

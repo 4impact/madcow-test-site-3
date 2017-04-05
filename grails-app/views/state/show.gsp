@@ -49,14 +49,12 @@
                     </tbody>
                 </table>
             </div>
-            <g:form class="form-horizontal" controller="State" action="delete">
+            <g:form class="form-horizontal" controller="State">
                 <div class="form-actions">
                     <g:hiddenField class="" name="id" value="${stateInstance?.id}" />
                     <g:actionSubmit class="btn btn-primary" action="edit" value="${message(code: 'default.button.edit.label', default: 'Edit')}" />
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');">
-                        <i class="icon-trash icon-white"></i>
-                        Delete
-                    </button>
+                    <g:actionSubmit action="delete" class="btn btn-danger" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');"
+                                    value="Delete"><i class="icon-trash icon-white"></i></g:actionSubmit>
                 </div>
             </g:form>
         </div>
