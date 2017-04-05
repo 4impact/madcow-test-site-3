@@ -84,13 +84,17 @@ class StateController {
         def stateInstance = State.get(params.id)
         if (stateInstance) {
             try {
-                stateInstance.delete(flush: true)
+                State.withTransaction{
+                    stateInstance.delete(failOnError: true)
+                }
+
                 flash.message = "${message(code: 'default.deleted.message', args: [message(code: 'state.label', default: 'State'), params.id])}"
                 redirect(action: "list")
             }
             catch (org.springframework.dao.DataIntegrityViolationException e) {
                 flash.message = "${message(code: 'default.not.deleted.message', args: [message(code: 'state.label', default: 'State'), params.id])}"
                 redirect(action: "show", id: params.id)
+                return
             }
         }
         else {
