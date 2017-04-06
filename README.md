@@ -5,7 +5,8 @@ This is the third iteration of the Madcow Test Site. It is being ported based on
 The idea is that it will be built up and deployed to heroku for madcow to run against. 
 
 It is intended to be hosted at 
-https://madcow-test-site-3.herokuapp.com 
+master branch - https://madcow-test-site-3.herokuapp.com 
+develop branch - https://madcow-test-site-3-develop.herokuapp.com
 
 or 
 
