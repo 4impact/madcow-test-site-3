@@ -113,11 +113,11 @@ task makeBuildVersion(type: Copy){
         include 'madcow-test-site.version'
         expand([
                 version : "${project.version}"?:"missing-project-version",
-                buildNumber : System.getenv("TRAVIS_BUILD_NUMBER")?:"0",
+                buildNumber : System.getenv("HEROKU_RELEASE_VERSION")?:"0",
                 branch : System.getenv("TRAVIS_BRANCH")?:"unknown",
                 tagName : System.getenv("TRAVIS_TAG")?:"unknown",
-                commit : System.getenv("SOURCE_VERSION")?:"-",
-                buildTimeStamp : new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                commit : System.getenv("HEROKU_SLUG_COMMIT")?:"-",
+                buildTimeStamp : System.getenv("HEROKU_RELEASE_CREATED_AT")?:new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
         ])
     }
     outputs.upToDateWhen { false }
