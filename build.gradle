@@ -116,7 +116,7 @@ task makeBuildVersion(type: Copy){
                 buildNumber : System.getenv("TRAVIS_BUILD_NUMBER")?:"0",
                 branch : System.getenv("TRAVIS_BRANCH")?:"unknown",
                 tagName : System.getenv("TRAVIS_TAG")?:"unknown",
-                commit : System.getenv("TRAVIS_COMMIT")?:"-",
+                commit : System.getenv("SOURCE_VERSION")?:"-",
                 buildTimeStamp : new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
         ])
     }
