@@ -90,6 +90,14 @@ tasks.stage.doLast() {
     delete fileTree(dir: "build/distributions")
     delete fileTree(dir: "build/libs", exclude: "*.war")
 }
+
+war {
+    from("$buildDir") {
+        include 'madcow-test-site.version'
+        into('assets')
+    }
+}
+
 war.mustRunAfter clean
 
 task copyToLib(type: Copy) {
@@ -100,7 +108,8 @@ task copyToLib(type: Copy) {
 }
 
 task makeBuildVersion(type: Copy){
-    from ('src/main/webapp/conf') {
+    into ("$buildDir")
+    from ('src/main') {
         include 'madcow-test-site.version'
         expand([
                 version : "${project.version}"?:"missing-project-version",
@@ -111,7 +120,6 @@ task makeBuildVersion(type: Copy){
                 buildTimeStamp : new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
         ])
     }
-    into ("$buildDir/resources/main/webapp/conf")
     outputs.upToDateWhen { false }
 }
 
