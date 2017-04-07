@@ -77,25 +77,6 @@ dependencies {
     compile 'com.github.jsimone:webapp-runner:8.0.30.2'
 }
 
-processResources {
-    from ('src/main') {
-        include 'build.txt'
-        expand([
-                version : "${project.version}"?:"missing-project-version",
-                buildNumber : System.getenv("TRAVIS_BUILD_NUMBER")?:"0",
-                branch : System.getenv("TRAVIS_BRANCH")?:"unknown",
-                tagName : System.getenv("TRAVIS_TAG")?:"unknown",
-                commit : System.getenv("TRAVIS_COMMIT")?:"-",
-                buildTimeStamp : new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-        ])
-    }
-    from ('src/main') {
-        exclude 'build.txt'
-    }
-    into 'build/resources/main'
-    outputs.upToDateWhen { false }
-}
-
 task wrapper(type: Wrapper) {
     gradleVersion = gradleWrapperVersion
 }
@@ -118,4 +99,21 @@ task copyToLib(type: Copy) {
     }
 }
 
+task makeBuildVersion(type: Copy){
+    from ('src/main/webapp/conf') {
+        include 'madcow-test-site.version'
+        expand([
+                version : "${project.version}"?:"missing-project-version",
+                buildNumber : System.getenv("TRAVIS_BUILD_NUMBER")?:"0",
+                branch : System.getenv("TRAVIS_BRANCH")?:"unknown",
+                tagName : System.getenv("TRAVIS_TAG")?:"unknown",
+                commit : System.getenv("TRAVIS_COMMIT")?:"-",
+                buildTimeStamp : new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+        ])
+    }
+    into ("$buildDir/resources/main/webapp/conf")
+    outputs.upToDateWhen { false }
+}
+
+war.dependsOn(makeBuildVersion)
 stage.dependsOn(copyToLib)

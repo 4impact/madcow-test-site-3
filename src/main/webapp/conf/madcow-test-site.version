@@ -1,0 +1,6 @@
+# NEW FILE
+version = ${version}
+build = ${buildNumber}
+commit = ${commit}
+branch = ${branch}
+buildTimestamp = ${buildTimeStamp}
