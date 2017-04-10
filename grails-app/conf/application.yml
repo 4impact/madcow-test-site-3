@@ -16,7 +16,7 @@ spring:
 ---
 grails:
     gorm:
-        failOnError: false
+        failOnError: true
     mime:
         disable:
             accept:

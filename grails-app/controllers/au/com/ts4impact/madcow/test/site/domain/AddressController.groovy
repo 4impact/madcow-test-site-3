@@ -1,6 +1,7 @@
 package au.com.ts4impact.madcow.test.site.domain
 
 import grails.converters.*
+import grails.transaction.Transactional
 
 class AddressController {
 
@@ -65,7 +66,7 @@ class AddressController {
     def showSearchResults = {
         params.max = Math.min( params.max ? params.max.toInteger() : 10,  100)
         params.offset = params?.offset?.toInteger() ?: 0
-        
+
         //if state long name is set then use it (for autocomplete page)
         if (params.stateLongName)
         {
@@ -140,21 +141,60 @@ class AddressController {
         return [addressInstance: addressInstance]
     }
 
-    def save = {
-        println "AddressController.save params : $params"
-
-        def addressInstance = new Address(params)
-        if (addressInstance.save(flush: true)) {
-            flash.message = "${message(code: 'default.created.message', args: [message(code: 'address.label', default: 'Address'), addressInstance.id])}"
-            redirect(action: "show", id: addressInstance.id)
+    @Transactional
+    def save(Address address) {
+        if (address == null) {
+            transactionStatus.setRollbackOnly()
+            notFound()
+            return
         }
-        else {
-            if (params.createTableLayout)
-                render(view: "createTableLayout", model: [addressInstance: addressInstance])
-            else
-                render(view: "create", model: [addressInstance: addressInstance])
+
+        if (address.hasErrors()) {
+            transactionStatus.setRollbackOnly()
+//            respond address.errors, view:'create'
+//            address.errors?.allErrors?.each{
+//                flash.message += message(it.code, it.arguments, it.defaultMessage)
+//            }
+            flash.message = address.errors.allErrors.collect{
+                //"Field:${it.getField()}| Error: ${message(it.code, it.arguments, it.defaultMessage)}, value:${it.getRejectedValue()}"
+                "${message(args: it.arguments, code: it.defaultMessage)} "
+            }.join('\n')
+            redirect(action: "create", id: params.id)
+            return
+        }
+
+        address.save flush:true
+
+        request.withFormat {
+            form multipartForm {
+                flash.message = message(code: 'default.created.message', args: [message(code: 'address.label', default: 'Address'), address.id])
+                redirect address
+            }
+            '*' { respond address, [status: CREATED] }
         }
     }
+
+
+//    def save = {
+//        println "AddressController.save params : $params"
+//
+//        def addressInstance = new Address(params)
+//
+////        Address.withTransaction{
+////            addressInstance.save(failOnError: true)
+////        }
+//
+//        if (addressInstance.save(flush: true)) {
+//            flash.message = "${message(code: 'default.created.message', args: [message(code: 'address.label', default: 'Address'), addressInstance.id])}"
+//            redirect(action: "show", id: addressInstance.id)
+//        }
+//        else {
+//            if (params.createTableLayout)
+//                render(view: "createTableLayout", model: [addressInstance: addressInstance])
+//            else
+//                render(view: "create", model: [addressInstance: addressInstance])
+//        }
+//    }
 
     def show = {
         def addressInstance = Address.get(params.id)
@@ -214,7 +254,7 @@ class AddressController {
 
     def delete = {
         //println "deleting address "+params.id;
-        
+
         def addressInstance = Address.get(params.id)
         if (addressInstance) {
             //println "address instance is not null"

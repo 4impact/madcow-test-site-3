@@ -28,7 +28,7 @@
                             <div class="control-group ${hasErrors(bean: addressInstance, field: 'addressLine1', 'errors')}">
                                 <label class="control-label" for="addressLine1"><g:message code="address.addressLine1.label" default="Address Line 1" /></label>
                                 <div class="controls">
-                                    <g:textField name="addressLine1" value="${addressInstance?.addressLine1}" />
+                                    <g:textField name="addressLine1" required="true" value="${addressInstance?.addressLine1}" />
                                 </div>
                             </div>
                         
@@ -42,7 +42,7 @@
                             <div class="control-group">
                                 <label class="control-label" for="postCodeEntry"><g:message code="address.postCode.label" default="Post Code" /></label>
                                 <div class="controls">
-                                    <g:textField name="postCodeEntry" value=""/>
+                                    <g:textField name="postCodeEntry" required="true" value=""/>
 %{--                                         onchange="${remoteFunction(
                                             controller:'address', 
                                             action:'ajaxGetSuburbs',

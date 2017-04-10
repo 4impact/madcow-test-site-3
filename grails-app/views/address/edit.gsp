@@ -70,7 +70,8 @@
                                     <label for="suburbOptions"><g:message code="address.suburb.label" default="Suburb" /></label>
                                 </td>
                                 <td id="suburbOptions">
-                                    <label for="postCode"><input type="radio" name="postCode.id" id="${addressInstance?.postCode.postCode}" value="${addressInstance?.postCode.postCode}" checked="">${addressInstance?.postCode.locality}</label>
+                                    <label for="postCode.id">
+                                        <input type="radio" name="postCode.id" id="${addressInstance?.postCode.postCode}" value="${addressInstance?.postCode.id}" checked="">${addressInstance?.postCode.locality}</label>
                                 </td>
                             </tr>
 
@@ -105,7 +106,7 @@
                 </div>
 
                 <asset:script type="text/javascript">
-                    $('#postCodeEntry').change(function() {
+                    var getPostCode = function() {
                            var request = $.ajax({
                                 url:'${g.createLink( controller:'address', action:'ajaxGetSuburbs')}',
                                 data: {id: $('#postCodeEntry').val()},
@@ -115,8 +116,9 @@
                                 complete: showSpinner,
                                 error: showSpinner
                            });
-
-                        });
+                    }
+                    $('#postCodeEntry').change(getPostCode);
+                    %{--$( document ).ready(getPostCode);--}%
                     $('#checkForDuplicates').click(function() {
                        $.ajax({
                             url:'${g.createLink( controller:'address', action:'ajaxCheckForDuplicates')}',
