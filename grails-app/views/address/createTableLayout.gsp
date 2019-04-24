@@ -6,49 +6,6 @@
         <g:set var="entityName" value="${message(code: 'address.label', default: 'Address')}" />
         <title><g:message code="default.create.label" args="[entityName]" /></title>
         
-        <g:javascript library="application" />
-		<g:javascript library="prototype" />
-		<g:javascript>
-		
-		    function updateSuburb(e) { // The response comes back as a bunch-o-JSON
-		    
-		        var postCodes = eval("(" + e.responseText + ")") // evaluate JSON		    
-		    
-		        // remove existing radio buttons
-		        var radioButtonLocation = document.getElementById("suburbOptions");
-		        while (radioButtonLocation.lastChild){
-		            radioButtonLocation.removeChild(radioButtonLocation.lastChild )
-		        }    
-		    
-		        if (postCodes) { 
-
-	                var radioButtonLocation = document.getElementById("suburbOptions");
-	                for (var i=0; i < postCodes.length; i++) {
-	                    var objRadItem = document.createElement("input");
-	                    objRadItem.type = "radio";
-	                    objRadItem.name = "postCode.id";
-	                    objRadItem.id = postCodes[i].id;
-	                    objRadItem.value = postCodes[i].id;
-	                    
-	                    if(i == 0) {objRadItem.defaultChecked = true; objRadItem.checked = true; };
-	
-	                    var objTextNode = document.createTextNode(" " + postCodes[i].locality);
-	
-	                    var objLabel = document.createElement("label");
-	                    objLabel.htmlFor = objRadItem.id;
-	                    objLabel.appendChild(objRadItem);
-	                    objLabel.appendChild(objTextNode);
-	
-	                    var objBreak = document.createElement("br");
-	
-	                    radioButtonLocation.appendChild(objLabel);
-	                    radioButtonLocation.appendChild(objBreak);
-	        		}
-                }
-		    }
-		
-		</g:javascript>
-        
     </head>
     <body>
         <div class="nav">
@@ -85,13 +42,14 @@
                                 <td valign="top" class="value ${hasErrors(bean: addressInstance, field: 'addressLine2', 'errors')}">
                                     <g:textField name="addressLine2" value="${addressInstance?.addressLine2}" />
                                 </td>
-                                <td valign="top" class="value">                                    
-                                    <g:textField name="postCodeEntry"                                    
-                                        onchange="${remoteFunction(
-                                            controller:'address', 
-                                            action:'ajaxGetSuburbs', 
-                                            params:'\'id=\' + escape(this.value)', 
-                                            onComplete:'updateSuburb(e)')}" />
+                                <td valign="top" class="value">
+                                    <g:textField name="postCodeEntry"/>
+                                    %{--<g:textField name="postCodeEntry"                                    --}%
+                                        %{--onchange="${remoteFunction(--}%
+                                            %{--controller:'address', --}%
+                                            %{--action:'ajaxGetSuburbs', --}%
+                                            %{--params:'\'id=\' + escape(this.value)', --}%
+                                            %{--onComplete:'updateSuburb(e)')}" />--}%
                                 </td>
                                 <td id="suburbOptions"></td>                                
                                 <td valign="top" class="value ${hasErrors(bean: addressInstance, field: 'wirelessAccessPointDetected', 'errors')}">
@@ -106,5 +64,35 @@
                 </div>
             </g:form>
         </div>
+        <asset:script type="text/javascript">
+            $('#checkForDuplicates').click(function() {
+                $.ajax({
+                    url:'${g.createLink( controller:'address', action:'ajaxCheckForDuplicates')}',
+                        data: $("form").serializeArray(),
+                        dataType: 'json',
+                        success: showNumberOfDuplicates,
+                        beforeSend: function(xhr) {
+                            clearNumberOfDuplicatesMessage();
+                            showSpinner();
+                        },
+                        complete: showSpinner,
+                        error: showSpinner
+                    });
+
+                });
+
+                $('#postCodeEntry').change(function() {
+                    var request = $.ajax({
+                        url:'${g.createLink( controller:'address', action:'ajaxGetSuburbs')}',
+                        data: {id: $('#postCodeEntry').val()},
+                        dataType: 'json',
+                        success: updateSuburb,
+                        beforeSend: showSpinner,
+                        complete: showSpinner,
+                        error: showSpinner
+                    });
+
+                });
+        </asset:script>
     </body>
 </html>
